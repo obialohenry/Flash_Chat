@@ -3,6 +3,8 @@ import 'package:flash_chat/screens/registration_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/app_strings.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flash_chat/widgets/wigets_utils.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String id = "WelcomeScreen";
@@ -28,8 +30,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
     controller.forward();
     controller.addListener(() {
       setState(() {});
-      print(animation.value);
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    controller.dispose();
   }
 
   @override
@@ -43,67 +51,53 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
+            const Row(
               children: <Widget>[
-                SizedBox(
+                FlashAnimatedContainer(
                   height: 60.0,
-                  child: Hero(
-                    tag: KFlashLogo,
-                    child: Image.asset(KFlashLogo),
-                  ),
                 ),
-                const Text(
-                  'Flash Chat',
-                  style: TextStyle(
-                    fontSize: 45.0,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
+                FlashChatAnimatedText(),
               ],
             ),
             const SizedBox(
               height: 48.0,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                elevation: 5.0,
-                color: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                child: MaterialButton(
-                  onPressed: () {
-                    //Go to login screen.
-                    Navigator.pushNamed(context, LoginScreen.id);
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: const Text(
-                    'Log In',
-                  ),
-                ),
-              ),
+            DefaultMaterialButton(
+              onTap: () => Navigator.pushNamed(context, LoginScreen.id),
+              text: 'Log In',
+              colour: Colors.lightBlueAccent,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () {
-                    //Go to registration screen.
-                    Navigator.pushNamed(context, RegistrationScreen.id);
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: const Text(
-                    'Register',
-                  ),
-                ),
-              ),
-            ),
+            DefaultMaterialButton(
+              onTap: () => Navigator.pushNamed(context, RegistrationScreen.id),
+              text: 'Register',
+              colour: Colors.blueAccent,
+            )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class FlashChatAnimatedText extends StatelessWidget {
+  const FlashChatAnimatedText({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTextStyle(
+      style: const TextStyle(
+        fontSize: 45.0,
+        fontWeight: FontWeight.w900,
+        color: Colors.black,
+      ),
+      child: AnimatedTextKit(
+        animatedTexts: [
+          TypewriterAnimatedText(
+            'Flash Chat',
+          )
+        ],
       ),
     );
   }
